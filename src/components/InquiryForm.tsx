@@ -163,7 +163,7 @@ export const InquiryForm: React.FC<InquiryFormProps> = ({
     const fallbackWaUrl = buildClientWhatsAppUrl(cleanedPhone);
 
     try {
-      const response = await fetch('/api/enquiries', {
+      const response = await fetch('./api/enquiries', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -178,6 +178,17 @@ export const InquiryForm: React.FC<InquiryFormProps> = ({
           companyWebsite,
         }),
       });
+
+      const contentType = response.headers.get('content-type') || '';
+
+      // If hosted on a static platform like GitHub Pages (404/405 or HTML response),
+      // complete the enquiry client-side via WhatsApp lead flow.
+      if (response.status === 404 || response.status === 405 || !contentType.includes('application/json')) {
+        setGeneratedWhatsAppUrl(fallbackWaUrl);
+        setStatus('success');
+        triggerExternalLink(fallbackWaUrl);
+        return;
+      }
 
       const data = await response.json();
 
@@ -197,12 +208,10 @@ export const InquiryForm: React.FC<InquiryFormProps> = ({
       // Open WhatsApp lead message to +91 98999 90140
       triggerExternalLink(finalWaUrl);
     } catch {
-      // If network/API encounters an issue, show explicit error state with direct WhatsApp fallback
+      // On static hosts or offline fallback, still allow seamless WhatsApp enquiry
       setGeneratedWhatsAppUrl(fallbackWaUrl);
-      setStatus('error');
-      setServerError(
-        `Something went wrong. Please try again or contact us directly on WhatsApp at ${DISPLAY_PHONE}.`
-      );
+      setStatus('success');
+      triggerExternalLink(fallbackWaUrl);
     }
   };
 
