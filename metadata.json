@@ -1,0 +1,6 @@
+{
+  "name": "NCR Properties | Farmhouses in Faridabad, Gurgaon, Palwal & Sohna",
+  "description": "Explore farmhouse and property options across Faridabad, Gurgaon, Delhi NCR, Palwal and Sohna. Contact NCR Properties for available farmhouse options and property assistance.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
