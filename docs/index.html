@@ -58,11 +58,51 @@
         ]
       }
     </script>
-    <script type="module" crossorigin src="./assets/index-cMDNVPUN.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-B_WpGyGj.css">
+    <script type="module" crossorigin src="./assets/app.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index.css">
   </head>
   <body class="bg-[#F7F5F0] text-[#181A18] antialiased selection:bg-[#1B3B2B] selection:text-[#F7F5F0]">
     <div id="root"></div>
+    <script>
+      (function () {
+        function loadStaticBundle() {
+          if (document.getElementById('ncr-static-bundle')) return;
+          var root = document.getElementById('root');
+          if (root && root.children.length > 0) return;
+
+          var hasCss = Array.from(document.querySelectorAll('link[rel="stylesheet"]')).some(
+            function (el) {
+              return el.href && el.href.indexOf('assets/index.css') !== -1;
+            }
+          );
+          if (!hasCss) {
+            var css = document.createElement('link');
+            css.rel = 'stylesheet';
+            css.href = './assets/index.css';
+            document.head.appendChild(css);
+          }
+
+          var hasJs = Array.from(document.querySelectorAll('script')).some(function (el) {
+            return el.src && el.src.indexOf('assets/app.js') !== -1;
+          });
+          if (!hasJs) {
+            var js = document.createElement('script');
+            js.id = 'ncr-static-bundle';
+            js.type = 'module';
+            js.src = './assets/app.js';
+            document.body.appendChild(js);
+          }
+        }
+
+        // If running on static hosting (GitHub Pages / custom domain) where /@vite/client is absent
+        setTimeout(function () {
+          var root = document.getElementById('root');
+          if (!root || root.children.length === 0) {
+            loadStaticBundle();
+          }
+        }, 350);
+      })();
+    </script>
   </body>
 </html>
 

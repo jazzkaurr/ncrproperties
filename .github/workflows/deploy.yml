@@ -33,7 +33,12 @@ jobs:
         run: npm install --legacy-peer-deps
 
       - name: Build static site
-        run: npm run build
+        run: |
+          npm run build
+          cp dist/index.html dist/404.html
+          touch dist/.nojekyll
+          if [ -f CNAME ]; then cp CNAME dist/CNAME; fi
+          if [ -f docs/CNAME ]; then cp docs/CNAME dist/CNAME; fi
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5

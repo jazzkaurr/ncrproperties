@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Phone, MessageCircle, MapPin } from 'lucide-react';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
@@ -30,6 +30,26 @@ import { Property, LocationOption, PropertyTypeOption } from './types/property';
 export default function App() {
   const [activeLegalPage, setActiveLegalPage] = useState<'privacy' | 'terms' | null>(null);
   const [selectedPropertyModal, setSelectedPropertyModal] = useState<Property | null>(null);
+
+  // Dynamically sync canonical URL and OpenGraph URL for custom domains
+  useEffect(() => {
+    const cleanUrl = window.location.origin + window.location.pathname;
+    let canonical = document.querySelector<HTMLLinkElement>('link[rel="canonical"]');
+    if (!canonical) {
+      canonical = document.createElement('link');
+      canonical.setAttribute('rel', 'canonical');
+      document.head.appendChild(canonical);
+    }
+    canonical.setAttribute('href', cleanUrl);
+
+    let ogUrl = document.querySelector<HTMLMetaElement>('meta[property="og:url"]');
+    if (!ogUrl) {
+      ogUrl = document.createElement('meta');
+      ogUrl.setAttribute('property', 'og:url');
+      document.head.appendChild(ogUrl);
+    }
+    ogUrl.setAttribute('content', cleanUrl);
+  }, []);
 
   // State for pre-filling the inquiry form when a user clicks "Enquire Now" or a Location/Category card
   const [preselectedLocation, setPreselectedLocation] = useState<LocationOption | ''>('');
